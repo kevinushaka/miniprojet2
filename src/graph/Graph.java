@@ -15,8 +15,8 @@ public class Graph {
 
     public static void main(String[] args) {
         Graph graph=new Graph();
-        graph.read(tree);
-        //graph.construct_with_prob(0.2,0.4);
+        //graph.read(tree);
+        graph.construct_with_prob(0.2,0.4);
         List<Node> nodeList=graph.red_sequence();
         System.out.println(graph.printListNode(nodeList));
     }
@@ -95,6 +95,7 @@ public class Graph {
         List<Node> red_sequence= new ArrayList<>();
         int nbReds=getNbRed();
         List<Node> nodeRemoved=new ArrayList<>();
+        List<Node> nodesColored=new ArrayList<>();
         while(nbReds!=0){
             Node max_score=null;
             int best_score=Integer.MIN_VALUE;
@@ -109,14 +110,26 @@ public class Graph {
                 nodes.remove(max_score);
                 nodeRemoved.add(max_score);
                 for(Edge edge : max_score.getEdgesOut()){
-                    if(edge.isRed() && edge.getOut().isBlue())
+                    if(edge.isRed() && edge.getOut().isBlue()) {
                         edge.getOut().setColor(Color.RED);
+                        nodesColored.add(edge.getOut());
+                    }
+                    else if(edge.isBlue() && edge.getOut().isRed()) {
+                        edge.getOut().setColor(Color.BLUE);
+                        nodesColored.add(edge.getOut());
+                    }
                 }
                 red_sequence.add(max_score);
             }
             nbReds=getNbRed();
         }
         nodes=nodeList;
+        for(Node nodeColored: nodesColored){
+            if(nodeColored.isRed())
+                nodeColored.setColor(Color.BLUE);
+            else
+                nodeColored.setColor(Color.RED);
+        }
         return red_sequence;
     }
     public int getNbRed(){

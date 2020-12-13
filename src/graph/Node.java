@@ -7,20 +7,28 @@ import java.util.Objects;
 public class Node {
 
     private String name;
-    private List<Edge> edges;
+    private List<Edge> edgesIn;
+    private List<Edge> edgesOut;
     private Color color;
 
     Node(String name,Color color){
         this.name=name;
         this.color=color;
-        edges=new ArrayList<>();
+        edgesIn=new ArrayList<>();
+        edgesOut=new ArrayList<>();
     }
 
-    public List<Edge> getEdges() {
-        return edges;
+    public List<Edge> getEdgesIn() {
+        return edgesIn;
     }
 
-    public void addEdge(Edge edge){edges.add(edge);}
+    public List<Edge> getEdgesOut() {
+        return edgesOut;
+    }
+
+    public void addEdgeIn(Edge edge){edgesIn.add(edge);}
+
+    public void addEdgeOut(Edge edge){edgesOut.add(edge);}
 
     @Override
     public boolean equals(Object o) {

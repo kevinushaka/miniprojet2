@@ -15,6 +15,7 @@ public class Graph {
 
     public static void main(String[] args) {
         Graph graph=new Graph();
+
         double n=1.0;
         for(double i=0;i<n;i+=0.1){
             for(double j=0;j<n;j+=0.1){
@@ -23,7 +24,7 @@ public class Graph {
             }
             System.out.println();
         }
-
+        //graph.construct_with_prob(0.1,0.4);
         //List<Node> nodeList=graph.red_sequence();
         //System.out.println(graph.printListNode(nodeList));
     }
@@ -179,20 +180,22 @@ public class Graph {
         int nNodes = 100;
         for (int j = 0; j < nNodes; j++) {
             Color color = null;
-            if (random.nextInt(100) < p * 100) {
+            if (random.nextInt(100) < (int)(p * 100.0)) {
                 color = Color.RED;
             } else {
                 color = Color.BLUE;
             }
+
             Node node = new Node(String.valueOf(j), color);
             nodes.add(node);
         }
+
         for (int i = 1; i < nNodes + 1; i++) {
             for (int j = 0; j < nNodes; j++) {
                 Node in = nodes.get(i - 1);
                 Node out = nodes.get(j);
                 Color color = null;
-                if(random.nextInt(100)<q*100) {
+                if(random.nextInt(100)<(int)(q*100.0)) {
                     color=Color.BLUE;
                 }else {
                     color=Color.RED;

@@ -30,6 +30,14 @@ public class Node {
 
     public void addEdgeOut(Edge edge){edgesOut.add(edge);}
 
+    public String getName() {
+        return name;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

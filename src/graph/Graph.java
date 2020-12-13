@@ -1,24 +1,41 @@
 package graph;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class Graph {
     List<Node> nodes;
     List<Edge> edges;
+    Random random;
 
     Graph(){
         edges=new ArrayList<>();
         nodes=new ArrayList<>();
+        random=new Random();
     }
 
     public static void main(String[] args) {
         Graph graph=new Graph();
         graph.read(tree);
+        //graph.construct_with_prob(0.2,0.4);
         List<Node> nodeList=graph.red_sequence();
-        System.out.println(nodeList);
+        System.out.println(graph.printListNode(nodeList));
+    }
+
+    public String printListNode(List<Node> nodes){
+        if(nodes.isEmpty())
+            return "[]";
+        String tab="";
+        tab+="[";
+        int n=nodes.size();
+        for(int i=0;i<n;i++){
+            tab+=nodes.get(i).getName();
+            if(n-1==i){
+                tab+="]";
+            }else{
+                tab+=", ";
+            }
+        }
+        return tab;
     }
 
     /*
@@ -77,11 +94,12 @@ public class Graph {
             nodeList.add(node);
         List<Node> red_sequence= new ArrayList<>();
         int nbReds=getNbRed();
-        while(nbReds!=red_sequence.size()){
+        List<Node> nodeRemoved=new ArrayList<>();
+        while(nbReds!=0){
             Node max_score=null;
             int best_score=Integer.MIN_VALUE;
             for(Node node :get_reds()){
-                int score = score(null,node,new ArrayList<>(),new ArrayList<>());
+                int score = score(null,node,new ArrayList<>(),new ArrayList<>(),nodeRemoved);
                 if(score>best_score){
                     best_score=score;
                     max_score=node;
@@ -89,8 +107,14 @@ public class Graph {
             }
             if(max_score!=null){
                 nodes.remove(max_score);
+                nodeRemoved.add(max_score);
+                for(Edge edge : max_score.getEdgesOut()){
+                    if(edge.isRed() && edge.getOut().isBlue())
+                        edge.getOut().setColor(Color.RED);
+                }
                 red_sequence.add(max_score);
             }
+            nbReds=getNbRed();
         }
         nodes=nodeList;
         return red_sequence;
@@ -112,21 +136,52 @@ public class Graph {
     }
 
 
-    public int score(Node from,Node to, List<Edge> edgesMarked, List<Node>nodesMarked){
+    public int score(Node from,Node to, List<Edge> edgesMarked, List<Node>nodesMarked,List<Node> nodesRemoved){
         nodesMarked.add(to);
         for(Edge edge : to.getEdgesOut()){
-            if(!edgesMarked.contains(edge)) {
+            if(!edgesMarked.contains(edge) && !nodesRemoved.contains(edge.getOut())) {
                 if (edge.isRed() && edge.getOut().isBlue() &&!nodesMarked.contains(edge.getOut())) {
                     edgesMarked.add(edge);
-                    return 1 + score(to,edge.getOut(),edgesMarked,nodesMarked);
+                    return 1 + score(to,edge.getOut(),edgesMarked,nodesMarked,nodesRemoved);
                 }
                 if (edge.isBlue() && edge.getOut().isRed()&&!nodesMarked.contains(edge.getOut())) {
                     edgesMarked.add(edge);
-                    return score(to,edge.getOut(),edgesMarked,nodesMarked) - 1;
+                    return score(to,edge.getOut(),edgesMarked,nodesMarked,nodesRemoved) - 1;
                 }
             }
         }
         return 0;
+    }
+
+    public void construct_with_prob(double p, double q) {
+        int nNodes = 100;
+        for (int j = 0; j < nNodes; j++) {
+            Color color = null;
+            if (random.nextInt(100) < p * 100) {
+                color = Color.RED;
+            } else {
+                color = Color.BLUE;
+            }
+            Node node = new Node(String.valueOf(j), color);
+            nodes.add(node);
+        }
+        for (int i = 1; i < nNodes + 1; i++) {
+            for (int j = 0; j < nNodes; j++) {
+                Node in = nodes.get(i - 1);
+                Node out = nodes.get(j);
+                Color color = null;
+                if(random.nextInt(100)<q*100) {
+                    color=Color.BLUE;
+                }else {
+                    color=Color.RED;
+                }
+                Edge edge = new Edge(color, in, out);
+                edges.add(edge);
+                in.addEdgeOut(edge);
+                out.addEdgeIn(edge);
+            }
+        }
+
     }
 
 }

@@ -13,21 +13,6 @@ public class Graph {
         random=new Random();
     }
 
-    public static void main(String[] args) {
-        Graph graph=new Graph();
-
-        double n=1.0;
-        for(double i=0;i<n;i+=0.1){
-            for(double j=0;j<n;j+=0.1){
-                graph.construct_with_prob(i,j);
-                System.out.print(graph.red_sequence().size()+" ");
-            }
-            System.out.println();
-        }
-        //graph.construct_with_prob(0.1,0.4);
-        //List<Node> nodeList=graph.red_sequence();
-        //System.out.println(graph.printListNode(nodeList));
-    }
 
     public String printListNode(List<Node> nodes){
         if(nodes.isEmpty())
@@ -95,7 +80,7 @@ public class Graph {
         return Color.BLUE;
     }
 
-    public List<Node>red_sequence(){
+    public List<Node> red_sequence(){
 
         List<Node> nodeList=new ArrayList<>();
         for(Node node:nodes)
@@ -208,5 +193,48 @@ public class Graph {
         }
 
     }
-
+    
+    public List<Node> red_sequence2() {
+    	List<Node> redSequence= new ArrayList<>();
+    	Collections.sort(nodes,new NodeScoreComparator());
+	    while(get_reds().size()!=0) {	
+	    	Node bestNode = nodes.get(0);
+	    	if(bestNode.isRed()) {
+	    		removeNode(bestNode);
+	    		redSequence.add(bestNode);
+	    	}else {
+	    		List<Node> reds =get_reds();
+	    		Collections.sort(reds,new NodeScoreComparator());
+	    		for(Node redNode:reds) {
+	    			if(redNode.canChangeToRed(bestNode)) {
+	    				removeNode(redNode);
+	    				redSequence.add(redNode);
+	    				break;
+	    			}
+	    		}
+	    	}
+	    }
+    	return redSequence;
+    	
+    }
+    
+    public void removeNode(Node n){
+    	 nodes.remove(n);
+         for(Edge edge : n.getEdgesOut()){
+             if(edge.isRed() && edge.getOut().isBlue()) {
+                 edge.getOut().setColor(Color.RED);
+             }
+             else if(edge.isBlue() && edge.getOut().isRed()) {
+                 edge.getOut().setColor(Color.BLUE);
+             }
+         }
+    }
+    
+    public String toString() {
+    	String s= new String();
+    	for(Node n:nodes) {
+    		s+=n.toStringWithEdge()+" ";
+    	}
+    	return s;		
+    }
 }

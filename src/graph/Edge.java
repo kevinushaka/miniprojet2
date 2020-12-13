@@ -17,7 +17,12 @@ public class Edge {
     public Node getOut() {
         return out;
     }
-
+    public Node getIn() {
+    	return in;
+    }
+    public Color getColor() {
+    	return color;
+    }
     @Override
     protected Object clone() throws CloneNotSupportedException {
         return super.clone();

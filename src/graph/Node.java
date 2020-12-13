@@ -53,4 +53,46 @@ public class Node {
 
     public boolean isRed(){return color==Color.RED;}
     public boolean isBlue(){return color==Color.BLUE;}
+    
+    public String toString() {
+    	return name;
+    }
+    
+    public String toStringWithEdge() {
+    	String s= new String();
+    	for(Edge e:edgesIn) {
+    		s+= color.name() +" "+ e.getColor().name()+" "+e.getOut().color.name()+" \n";
+    		s+= name+" <- "+e.getOut()+" \n";
+    	}
+    	for(Edge e:edgesOut) {
+    		s+= color.name() +" "+ e.getColor().name()+" "+e.getIn().color.name()+" \n";
+    		s+= name+"->"+e.getIn()+" \n";
+    	}
+    	return s;
+    }
+    
+    public int score2() {
+    	int score =0;
+    		for(Edge e:edgesOut) {
+    			if(e.isRed()) {
+    				if(e.getOut().isBlue()) {
+    					score+=2;
+    				}else {
+    					score++;
+    				}
+    			}else if(e.isBlue() && e.getOut().isRed()) {
+    				score--;
+    			}
+    		}
+    	return score;
+    }
+    
+   public boolean canChangeToRed(Node n2){
+	   for(Edge e:edgesOut) {
+		   if(e.isRed() && e.getOut().name.equals(n2.name)) {
+			   return true;
+		   }
+	   }
+	   return false;
+   }
 }

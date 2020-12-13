@@ -15,10 +15,17 @@ public class Graph {
 
     public static void main(String[] args) {
         Graph graph=new Graph();
-        //graph.read(tree);
-        graph.construct_with_prob(0.2,0.4);
-        List<Node> nodeList=graph.red_sequence();
-        System.out.println(graph.printListNode(nodeList));
+        double n=1.0;
+        for(double i=0;i<n;i+=0.1){
+            for(double j=0;j<n;j+=0.1){
+                graph.construct_with_prob(i,j);
+                System.out.print(graph.red_sequence().size()+" ");
+            }
+            System.out.println();
+        }
+
+        //List<Node> nodeList=graph.red_sequence();
+        //System.out.println(graph.printListNode(nodeList));
     }
 
     public String printListNode(List<Node> nodes){
@@ -167,6 +174,8 @@ public class Graph {
     }
 
     public void construct_with_prob(double p, double q) {
+        nodes=new ArrayList<>();
+        edges=new ArrayList<>();
         int nNodes = 100;
         for (int j = 0; j < nNodes; j++) {
             Color color = null;

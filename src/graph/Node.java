@@ -11,7 +11,7 @@ public class Node {
     private List<Edge> edgesOut;
     private Color color;
 
-    Node(String name,Color color){
+    public Node(String name, Color color){
         this.name=name;
         this.color=color;
         edgesIn=new ArrayList<>();

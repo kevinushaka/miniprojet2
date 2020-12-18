@@ -3,7 +3,7 @@ package graph;
 public class Main {
 
     public static void main(String[] args) {
-        Graph graph=new Graph();
+
 		Graph g= new CompleteGraph(0.5f, 0.5f);
 		System.out.println(g);
         for(float p=0; p<1;p+=0.1f) {

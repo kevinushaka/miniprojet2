@@ -5,7 +5,7 @@ public class Edge {
     private Color color;
     private Node in;
     private Node out;
-    Edge(Color color,Node in, Node out){
+    public Edge(Color color, Node in, Node out){
         this.color=color;
         this.in=in;
         this.out=out;

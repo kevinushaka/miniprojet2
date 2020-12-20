@@ -6,8 +6,8 @@ public class Main {
 
 		Graph g= new CompleteGraph(0.5f, 0.5f);
 		System.out.println(g);
-        for(float p=0; p<1;p+=0.1f) {
-			for(float q=0; q<1;q+=0.1f) {
+        for(float p=0; p<1.1;p+=0.1f) {
+			for(float q=0; q<1.1;q+=0.1f) {
 				Graph g2= new CompleteGraph(p, q);
 				System.out.print(g2.red_sequence2().size()+" ");
 			}	

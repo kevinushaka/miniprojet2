@@ -39,48 +39,38 @@ public class CompleteGraphv2 {
         List<Node> red_sequence= new ArrayList<>();
         while(nodes_red.size()!=0){
             Node max_score_node=null;
-            List<Node>nodes_to_remove=new ArrayList<>();
             int best_score=Integer.MIN_VALUE;
             for(Node node :nodes_red){
                 Score score = score(node);
-                if(score.diff_transformation()>=best_score){
-                    best_score=score.diff_transformation();
+                if(score.score()>=best_score){
+                    best_score=score.score();
                     max_score_node=node;
-                }else if(score.diff_transformation()==0&&
-                        score.is_neutral()){
-                    nodes_to_remove.add(node);
-                }
+                };
             }
             if(max_score_node!=null){
-            nodes_to_remove.add(max_score_node);}
-
-            for(Node node_to_remove:nodes_to_remove){
-                removeNode(node_to_remove);
-                red_sequence.add(node_to_remove);
+            removeNode(max_score_node);
+            red_sequence.add(max_score_node);
             }
-
 
         }
         return red_sequence;
     }
     public void removeNode(Node node){
-        for(Edge edge : node.getEdgesIn()){
-            Node otherNode= edge.getIn();
-            otherNode.getEdgesOut().remove(edge);
-        }
+        node.mark();
         nodes_red.remove(node);
         for(Edge edge : node.getEdgesOut()){
             Node otherNode= edge.getOut();
-                if(edge.isRed() &&otherNode.isBlue() ) {
+            if(!otherNode.is_marked()) {
+                if (edge.isRed() && otherNode.isBlue()) {
                     otherNode.setColor(Color.RED);
                     nodes_red.add(otherNode);
                     nodes_blue.remove(otherNode);
-                }
-                else if(edge.isBlue() && otherNode.isRed()) {
+                } else if (edge.isBlue() && otherNode.isRed()) {
                     otherNode.setColor(Color.BLUE);
                     nodes_blue.add(otherNode);
                     nodes_red.remove(otherNode);
                 }
+            }
 
         }
     }
@@ -90,12 +80,14 @@ public class CompleteGraphv2 {
         Score score =new Score();
         for(Edge edge : node.getEdgesOut()){
             Node otherNode=edge.getOut();
+            if(!otherNode.is_marked()) {
                 if (edge.isRed() && otherNode.isBlue()) {
                     score.increase_transform_red();
                 }
                 if (edge.isBlue() && otherNode.isRed()) {
                     score.increase_transform_blue();
                 }
+            }
 
         }
         return score;
@@ -105,10 +97,7 @@ public class CompleteGraphv2 {
         int transform_blue=0;
         void increase_transform_red(){transform_red++;}
         void increase_transform_blue(){transform_blue++;}
-        public int getTransform_blue() { return transform_blue; }
-        public int getTransform_red() { return transform_red; }
-        int diff_transformation(){return transform_red-transform_blue;}
-        boolean is_neutral(){return transform_red==0&&transform_blue==0;}
+        int score(){return transform_red-transform_blue;}
     }
 
     public void construct_with_prob(double p, double q) {
@@ -134,9 +123,6 @@ public class CompleteGraphv2 {
 
         for (int i = 0; i < nNodes ; i++) {
             for (int j = 0; j < nNodes; j++) {
-                if(q==1.0f){
-                    int u=2;
-                }
                 if(i!=j){
                     Node in = nodes.get(i );
                     Node out = nodes.get(j);

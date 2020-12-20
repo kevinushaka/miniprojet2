@@ -10,6 +10,7 @@ public class Node {
     private List<Edge> edgesIn;
     private List<Edge> edgesOut;
     private Color color;
+    private  boolean marked=false;
 
     public Node(String name, Color color){
         this.name=name;
@@ -17,6 +18,10 @@ public class Node {
         edgesIn=new ArrayList<>();
         edgesOut=new ArrayList<>();
     }
+
+    public  void mark(){this.marked=true;}
+
+    public boolean is_marked(){return  marked;}
 
     public List<Edge> getEdgesIn() {
         return edgesIn;

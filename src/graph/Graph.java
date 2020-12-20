@@ -102,16 +102,7 @@ public class Graph {
             if(max_score!=null){
                 nodes.remove(max_score);
                 nodeRemoved.add(max_score);
-                for(Edge edge : max_score.getEdgesOut()){
-                    if(edge.isRed() && edge.getOut().isBlue()) {
-                        edge.getOut().setColor(Color.RED);
-                        nodesColored.add(edge.getOut());
-                    }
-                    else if(edge.isBlue() && edge.getOut().isRed()) {
-                        edge.getOut().setColor(Color.BLUE);
-                        nodesColored.add(edge.getOut());
-                    }
-                }
+                
                 red_sequence.add(max_score);
             }
             nbReds=getNbRed();
@@ -196,8 +187,8 @@ public class Graph {
     
     public List<Node> red_sequence2() {
     	List<Node> redSequence= new ArrayList<>();
-    	Collections.sort(nodes,new NodeScoreComparator());
 	    while(get_reds().size()!=0) {	
+	    	Collections.sort(nodes,new NodeScoreComparator());
 	    	Node bestNode = nodes.get(0);
 	    	if(bestNode.isRed()) {
 	    		removeNode(bestNode);
@@ -205,12 +196,18 @@ public class Graph {
 	    	}else {
 	    		List<Node> reds =get_reds();
 	    		Collections.sort(reds,new NodeScoreComparator());
+	    		boolean remove = false;
 	    		for(Node redNode:reds) {
 	    			if(redNode.canChangeToRed(bestNode)) {
 	    				removeNode(redNode);
 	    				redSequence.add(redNode);
+	    				remove=true;
 	    				break;
 	    			}
+	    		}
+	    		if(!remove) {
+	    			redSequence.add(get_reds().get(0));
+	    			removeNode(get_reds().get(0));
 	    		}
 	    	}
 	    }
@@ -221,11 +218,10 @@ public class Graph {
     public void removeNode(Node n){
     	 nodes.remove(n);
          for(Edge edge : n.getEdgesOut()){
-             if(edge.isRed() && edge.getOut().isBlue()) {
-                 edge.getOut().setColor(Color.RED);
-             }
-             else if(edge.isBlue() && edge.getOut().isRed()) {
-                 edge.getOut().setColor(Color.BLUE);
+             if(edge.isRed()) {
+                 edge.getIn().setColor(Color.RED);
+             }else {
+                 edge.getIn().setColor(Color.BLUE);
              }
          }
     }

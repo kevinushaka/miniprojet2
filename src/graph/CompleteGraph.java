@@ -4,7 +4,7 @@ public class CompleteGraph extends Graph{
 	
 	public CompleteGraph(float redNodePercentage,float blueEdgePercentage) {
 		super();
-		for(int i=0; i<5;i++) {
+		for(int i=0; i<100;i++) {
 			nodes.add(new Node(i+"", colorNode(redNodePercentage)));
 		}
 		for(int i=0; i<nodes.size();i++) {
@@ -14,6 +14,8 @@ public class CompleteGraph extends Graph{
 				
 				Edge firstToSecond = new Edge(colorEdge(blueEdgePercentage), first, second);
 				Edge secondToFirst =  new Edge(colorEdge(blueEdgePercentage),second,first);
+				//System.out.println("Edge1"+firstToSecond.isRed());
+				//System.out.println("Edge2"+firstToSecond.isRed());
 				first.addEdgeIn(firstToSecond);
 				first.addEdgeOut(secondToFirst);
 				second.addEdgeIn(secondToFirst);

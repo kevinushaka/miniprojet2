@@ -1,39 +1,25 @@
 package graph;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.SplittableRandom;
+import java.util.*;
 import java.util.function.Supplier;
 
-public class CompleteGraphv2 {
+public class Heuristique1 extends Heuristique {
     List<Node> nodes_red;
     List<Node> nodes_blue;
     List<Node> nodes;
     int nbRedEdges=0;
     int nbBLueEdges=0;
 
-    CompleteGraphv2(){
+    Heuristique1(float p, float q){
         nodes_red=new ArrayList<>();
         nodes_blue=new ArrayList<>();
         nodes=new ArrayList<>();
+        construct_with_prob(p,q);
     }
 
-    public void simulation_complete_graph() {
-        for(float p=0.0f; p<=1.1;p+=0.1) {
-            for(float q=0.0f; q<=1.1;q+=0.1) {
-                this.construct_with_prob(p,q);
-                System.out.print(this.red_sequence().size()+" ");
-            }
-            System.out.println();
-        }
-    }
 
-    public static void main(String[] args) {
-        CompleteGraphv2 graph=new CompleteGraphv2();
-        graph.simulation_complete_graph();
-    }
 
+    @Override
     public List<Node> red_sequence(){
 
         List<Node> red_sequence= new ArrayList<>();
@@ -138,7 +124,17 @@ public class CompleteGraphv2 {
         }
 
     }
-    
+
+
+    List<Node> get_reds(){
+        List<Node>nodesRed=new ArrayList<>();
+        for(Node node :nodes)
+            if(node.isRed())
+                nodesRed.add(node);
+        return nodesRed;
+    }
+
+
     public String toString() {
     	String s= new String();
     	for(Node n:nodes) {
